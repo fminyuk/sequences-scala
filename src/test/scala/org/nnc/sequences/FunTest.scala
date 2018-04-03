@@ -2,6 +2,8 @@ package org.nnc.sequences
 
 import org.scalatest.FunSuite
 
+import scala.collection.mutable
+
 class FunTest extends FunSuite {
   test("some test") {
     val stack = List(1, 2)
@@ -17,6 +19,7 @@ class FunTest extends FunSuite {
   test("trie") {
     val trie = new Trie[Char, String]
     trie.value = null
+    trie.children('c') = new Trie[Char, String]
 
     print(trie.value)
   }
