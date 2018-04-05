@@ -57,7 +57,7 @@ class StateCalcTest extends FunSuite {
     val s1 = calc.next(s, bin("1"))
     assert(s0.positions.lengthCompare(0) == 0)
     assert(s1.positions.lengthCompare(1) == 0)
-    assert(s1.positions(0) == Position(1, 0))
+    assert(s1.positions.head == Position(1, 0))
   }
 
   test("next n=1") {
@@ -139,19 +139,19 @@ class StateCalcTest extends FunSuite {
     val s00011 = calc.next(s, bin("00011")).copyTo(0)
     val s00100 = calc.next(s, bin("00100")).copyTo(0)
     assert(s00000.positions.lengthCompare(2) == 0)
-    assert(s00000.positions(0) == Position(-1, 1))
+    assert(s00000.positions.head == Position(-1, 1))
     assert(s00000.positions(1) == Position(0, 1))
     assert(s00001.positions.lengthCompare(3) == 0)
-    assert(s00001.positions(0) == Position(-1, 1))
+    assert(s00001.positions.head == Position(-1, 1))
     assert(s00001.positions(1) == Position(0, 1))
     assert(s00001.positions(2) == Position(2, 2))
     assert(s00010.positions.lengthCompare(3) == 0)
-    assert(s00010.positions(0) == Position(-1, 1))
+    assert(s00010.positions.head == Position(-1, 1))
     assert(s00010.positions(1) == Position(0, 1))
     assert(s00010.positions(2) == Position(1, 1))
     assert(s00011 == s00010)
     assert(s00100 == s)
   }
 
-  def bin(string: String) = Integer.parseInt(string, 2)
+  private def bin(string: String) = Integer.parseInt(string, 2)
 }

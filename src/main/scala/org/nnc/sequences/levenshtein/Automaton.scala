@@ -1,0 +1,34 @@
+package org.nnc.sequences.levenshtein
+
+class Automaton[E](n: Int, sequence: Array[E], uniTablesFactory: UniTablesFactory) {
+  private val uni = uniTablesFactory.create(n)
+
+  def start: AutomatonState[E] = new AutomatonStateImpl(uni.start, 0)
+
+  private def calcZ(char: E, position: Int) = {
+    var z = 0
+    for (i <- (position - n).max(0) to (position + n).min(sequence.length - 1)) {
+      if (char == sequence(i)) {
+        z |= 1 << (n - (i - position))
+      }
+    }
+    z
+  }
+
+  private class AutomatonStateImpl(state: Int, position: Int) extends AutomatonState[E] {
+    override def next(char: E): AutomatonState[E] =
+      new AutomatonStateImpl(uni.transitions(state)(calcZ(char, position)), position + 1)
+
+    override def cost: Int = {
+      val cost = sequence.length - position match {
+        case diff if diff.abs <= n => uni.cost(state)(diff + n)
+        case _ => n + 1
+      }
+
+      if (cost == n + 1) -1
+      else cost
+    }
+
+    override def isStop: Boolean = state == uni.stop
+  }
+}
