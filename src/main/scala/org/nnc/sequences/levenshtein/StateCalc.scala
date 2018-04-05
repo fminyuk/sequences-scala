@@ -11,14 +11,14 @@ class StateCalc(val n: Int) {
   def cost(state: State, i: Int): Int = (n + 1).min(state.positions.map(p => p.e + (i - p.i).abs).min)
 
   private def getElementary(position: Position, z: Int) = getJ(z, n - position.e) match {
-      case 0 => Seq(Position(position.i + 1, position.e))
-      case j => {
-        if (j > 0) Some(Position(position.i + j + 1, position.e + j)) else None
-      } ++: {
-        if (position.e < n) {
-          Seq(Position(position.i, position.e + 1), Position(position.i + 1, position.e + 1))
-        } else Seq()
-      }
+    case 0 => Seq(Position(position.i + 1, position.e))
+    case j => {
+      if (j > 0) Some(Position(position.i + j + 1, position.e + j)) else None
+    } ++: {
+      if (position.e < n) {
+        Seq(Position(position.i, position.e + 1), Position(position.i + 1, position.e + 1))
+      } else Seq()
+    }
   }
 
   private def getJ(z: Int, k: Int): Int = (0 to k).find(i => (z & (1 << (k - i))) != 0).getOrElse(-1)
