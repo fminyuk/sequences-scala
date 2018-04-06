@@ -44,9 +44,12 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     while (states.nonEmpty) {
       val state = states.dequeue
       transitions(state) = new Array[State](1 << (2 * calc.n + 1))
-      for(z <- 0 until (1 << (2 * calc.n + 1))){
+      for (z <- 0 until (1 << (2 * calc.n + 1))) {
         val next = calc.next(state, z).copyTo(0)
         transitions(state)(z) = next
+        if (!transitions.contains(next)) {
+          states.enqueue(next)
+        }
       }
     }
 

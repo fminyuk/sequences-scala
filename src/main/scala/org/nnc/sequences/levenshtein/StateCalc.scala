@@ -8,7 +8,7 @@ class StateCalc(val n: Int) {
     State(state.i + 1, positions)
   }
 
-  def cost(state: State, i: Int): Int = (n + 1).min(state.positions.map(p => p.e + (i - p.i).abs).min)
+  def cost(state: State, i: Int): Int = ((n + 1) +: state.positions.map(p => p.e + (i - p.i).abs)).min
 
   private def getElementary(position: Position, z: Int) = getJ(z, n - position.e) match {
     case 0 => Seq(Position(position.i + 1, position.e))

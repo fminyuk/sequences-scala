@@ -1,6 +1,6 @@
 package org.nnc.sequences.levenshtein
 
-class Automaton[E](n: Int, sequence: Array[E], uniTablesFactory: UniTablesFactory) {
+class Automaton[E](sequence: Array[E], n: Int, uniTablesFactory: UniTablesFactory) {
   private val uni = uniTablesFactory.create(n)
 
   def start: AutomatonState[E] = new AutomatonStateImpl(uni.start, 0)
