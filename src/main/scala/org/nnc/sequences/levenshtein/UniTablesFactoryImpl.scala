@@ -43,14 +43,9 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     states.enqueue(calc.start)
     while (states.nonEmpty) {
       val state = states.dequeue
-      transitions(state) = new Array[State](1 << (2 * calc.n + 1))
-      for (z <- 0 until (1 << (2 * calc.n + 1))) {
-        val next = calc.next(state, z).copyTo(0)
-        transitions(state)(z) = next
-        if (!transitions.contains(next)) {
-          states.enqueue(next)
-        }
-      }
+      val next = (0 until (1 << (2 * calc.n + 1))).map(calc.next(state, _).copyTo(0)).toArray
+      transitions(state) = next
+      states ++= next.filter(!transitions.contains(_))
     }
 
     transitions
@@ -60,5 +55,5 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     states.zipWithIndex.toMap
 
   private def calcStopState(transitions: Array[Array[Int]]) =
-    transitions.zipWithIndex.find(s => s._1.forall(i => i == s._2)).get._2
+    transitions.zipWithIndex.find(s => s._1.forall(_ == s._2)).get._2
 }

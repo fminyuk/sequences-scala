@@ -20,15 +20,11 @@ class Automaton[E](sequence: Array[E], n: Int, uniTablesFactory: UniTablesFactor
       new AutomatonStateImpl(uni.transitions(state)(calcZ(char, position)), position + 1)
 
     override def cost: Int = {
-      val cost = sequence.length - position match {
-        case diff if diff.abs <= n => uni.cost(state)(diff + n)
-        case _ => n + 1
-      }
-
-      if (cost == n + 1) -1
-      else cost
+      val diff = sequence.length - position
+      val cost = if (diff >= -n && diff <= n) uni.cost(state)(diff + n) else n + 1
+      if (cost == n + 1) -1 else cost
     }
 
-    override def isStop: Boolean = state == uni.stop
+    override def nonStop: Boolean = state != uni.stop
   }
 }

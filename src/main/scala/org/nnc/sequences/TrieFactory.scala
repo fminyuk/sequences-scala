@@ -1,7 +1,7 @@
 package org.nnc.sequences
 
 class TrieFactory[E, V >: Null] {
-  def create(sequences: Iterable[Sequence[E, V]]) = {
+  def create(sequences: Iterable[Sequence[E, V]]): Trie[E, V] = {
     val root = new Trie[E, V]
 
     for (sequence <- sequences) {

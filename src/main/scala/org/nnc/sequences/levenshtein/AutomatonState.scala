@@ -5,5 +5,5 @@ trait AutomatonState[E] {
 
   def cost: Int
 
-  def isStop: Boolean
+  def nonStop: Boolean
 }
