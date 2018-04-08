@@ -9,4 +9,4 @@ package org.nnc.sequences
   * @tparam E Тип символов.
   * @tparam V Тип значений.
   */
-class LinearTrie[E, V >: Null](val chars: Array[E], val values: Array[V], val lens: Array[Int])
+class TrieIndex[E, V >: Null](val chars: Array[E], val values: Array[V], val lens: Array[Int])

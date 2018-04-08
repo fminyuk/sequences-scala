@@ -10,11 +10,11 @@ import scala.io.Source
 
 class FuzzyMatcherTest extends FunSuite {
 
-  ignore("wiki dictionary") {
+  test("wiki dictionary") {
     val words = readWords
     val pattern = createPattern("профессор", 2)
     val trie = createTrie(words)
-    val linear = new LinearTrieFactory[Char, String]().create(trie)
+    val linear = new TrieIndexFactory[Char, String]().create(trie)
     val matcher = new FuzzyMatcher(linear)
     var matches: Seq[FuzzyMatch[String]] = null
     val t0 = System.nanoTime()

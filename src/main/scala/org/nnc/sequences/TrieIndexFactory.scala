@@ -3,13 +3,13 @@ package org.nnc.sequences
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-class LinearTrieFactory[E: ClassTag, V >: Null : ClassTag] {
-  def create(trie: Trie[E, V]): LinearTrie[E, V] = {
+class TrieIndexFactory[E: ClassTag, V >: Null : ClassTag] {
+  def create(trie: Trie[E, V]): TrieIndex[E, V] = {
     val chars = new ArrayBuffer[E]
     val values = new ArrayBuffer[V]
     val lens = new ArrayBuffer[Int]
     fill(chars, values, lens, null.asInstanceOf[E], trie)
-    new LinearTrie[E, V](chars.toArray, values.toArray, lens.toArray)
+    new TrieIndex[E, V](chars.toArray, values.toArray, lens.toArray)
   }
 
   private def fill(chars: ArrayBuffer[E], values: ArrayBuffer[V], lens: ArrayBuffer[Int], char: E, trie: Trie[E, V]): Int = {

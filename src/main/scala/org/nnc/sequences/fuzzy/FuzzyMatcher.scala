@@ -5,7 +5,7 @@ import org.nnc.sequences.levenshtein.{Automaton, AutomatonState}
 
 import scala.collection.mutable.ArrayBuffer
 
-class FuzzyMatcher[E, V >: Null](trie: LinearTrie[E, V]) {
+class FuzzyMatcher[E, V >: Null](trie: TrieIndex[E, V]) {
   def search(pattern: Automaton[E]): Seq[FuzzyMatch[V]] = {
     val matches = ArrayBuffer[FuzzyMatch[V]]()
     search(0, pattern.start, matches)
