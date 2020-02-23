@@ -9,4 +9,8 @@ package org.nnc.sequences.levenshtein
   * @param transitions Таблица стоимости состояний.
   * @param cost        Таблица переходов.
   */
-class UniTables(val n: Int, val start: Int, val stop: Int, val transitions: Array[Array[Int]], val cost: Array[Array[Int]])
+case class UniTables(n: Int,
+                     start: Int,
+                     stop: Int,
+                     transitions: Array[Array[Int]],
+                     cost: Array[Array[Int]])

@@ -4,5 +4,5 @@ import scala.collection.mutable
 
 class Trie[E, V >: Null] {
   val children: mutable.Map[E, Trie[E, V]] = mutable.Map[E, Trie[E, V]]()
-  var value: V = null
+  var value: V = _
 }

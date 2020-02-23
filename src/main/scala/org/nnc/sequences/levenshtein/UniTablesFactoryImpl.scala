@@ -36,8 +36,7 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     new UniTables(n, start, stop, transitions, cost)
   }
 
-
-  private def calcTransitions(calc: StateCalc) = {
+  private def calcTransitions(calc: StateCalc): mutable.Map[State, Array[State]] = {
     val transitions = mutable.HashMap[State, Array[State]]()
     val states = mutable.Queue[State]()
     states.enqueue(calc.start)
@@ -51,9 +50,9 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     transitions
   }
 
-  private def calcState2Index(states: Iterable[State]) =
+  private def calcState2Index(states: Iterable[State]): Map[State, Int] =
     states.zipWithIndex.toMap
 
-  private def calcStopState(transitions: Array[Array[Int]]) =
+  private def calcStopState(transitions: Array[Array[Int]]): Int =
     transitions.zipWithIndex.find(s => s._1.forall(_ == s._2)).get._2
 }

@@ -1,6 +1,7 @@
 package org.nnc.sequences.levenshtein
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.Seq
 
 /**
   * Состояние детерминированного автомата Левенштейна, суперпозиция состояний недетерминированного автомата.

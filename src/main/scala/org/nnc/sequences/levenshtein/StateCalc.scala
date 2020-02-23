@@ -1,7 +1,7 @@
 package org.nnc.sequences.levenshtein
 
 class StateCalc(val n: Int) {
-  def start = State(0, Position(0, 0))
+  def start: State = State(0, Position(0, 0))
 
   def next(state: State, z: Int): State = {
     val positions = state.positions.flatMap(p => getElementary(p, z >> (state.i - p.i + p.e)))
@@ -10,7 +10,7 @@ class StateCalc(val n: Int) {
 
   def cost(state: State, i: Int): Int = ((n + 1) +: state.positions.map(p => p.e + (i - p.i).abs)).min
 
-  private def getElementary(position: Position, z: Int) = getJ(z, n - position.e) match {
+  private def getElementary(position: Position, z: Int): Seq[Position] = getJ(z, n - position.e) match {
     case 0 => Seq(Position(position.i + 1, position.e))
     case j => {
       if (j > 0) Some(Position(position.i + j + 1, position.e + j)) else None

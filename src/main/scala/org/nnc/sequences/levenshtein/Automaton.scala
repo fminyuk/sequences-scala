@@ -5,7 +5,7 @@ class Automaton[E](sequence: Array[E], n: Int, uniTablesFactory: UniTablesFactor
 
   def start: AutomatonState[E] = new AutomatonStateImpl(uni.start, 0)
 
-  private def calcZ(char: E, position: Int) = {
+  private def calcZ(char: E, position: Int): Int = {
     var z = 0
     for (i <- (position - n).max(0) to (position + n).min(sequence.length - 1)) {
       if (char == sequence(i)) {
