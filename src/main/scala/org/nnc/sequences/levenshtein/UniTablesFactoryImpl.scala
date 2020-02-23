@@ -33,7 +33,7 @@ class UniTablesFactoryImpl extends UniTablesFactory {
     // Состояние остановки.
     val stop = calcStopState(transitions)
 
-    new UniTables(n, start, stop, transitions, cost)
+    UniTables(n, start, stop, transitions, cost)
   }
 
   private def calcTransitions(calc: StateCalc): mutable.Map[State, Array[State]] = {

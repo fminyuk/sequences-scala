@@ -1,4 +1,13 @@
 package org.nnc.sequences
 
-class Sequence[E, V](var chars: Array[E], val value: V)
+/**
+  * Последовательность со значением.
+  *
+  * @param chars Последовательность символов.
+  * @param value Значение.
+  * @tparam E Тип символа.
+  * @tparam V Тип значения.
+  */
+case class Sequence[E, V](chars: Array[E],
+                          value: V)
 
