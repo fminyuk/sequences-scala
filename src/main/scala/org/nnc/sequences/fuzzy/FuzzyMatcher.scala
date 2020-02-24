@@ -17,7 +17,7 @@ class FuzzyMatcher[E, V >: Null](trie: TrieIndex[E, V]) {
     if (nodeValue != null) {
       val cost = pointer.cost
       if (cost >= 0) {
-        matches += new FuzzyMatch(nodeValue, cost)
+        matches += FuzzyMatch(nodeValue, cost)
       }
     }
     val size = 1 + trie.lens(pos)
