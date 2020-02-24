@@ -1,27 +1,55 @@
 package org.nnc.sequences
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 import scala.reflect.ClassTag
 
-class TrieIndexFactory[E: ClassTag, V >: Null : ClassTag] {
-  def create(trie: Trie[E, V]): TrieIndex[E, V] = {
-    val chars = new ArrayBuffer[E]
-    val values = new ArrayBuffer[V]
-    val lens = new ArrayBuffer[Int]
-    fill(chars, values, lens, null.asInstanceOf[E], trie)
-    new TrieIndex[E, V](chars.toArray, values.toArray, lens.toArray)
+object TrieIndexFactory {
+  def create[E: ClassTag, V >: Null : ClassTag](sequences: Seq[Sequence[E, V]])(implicit ord: Ordering[E]): TrieIndex[E, V] = {
+    import math.Ordering.Implicits.seqOrdering
+
+    val sorted = sequences.sortBy(_.chars)
+
+    createFromSorted(sorted)
   }
 
-  private def fill(chars: ArrayBuffer[E], values: ArrayBuffer[V], lens: ArrayBuffer[Int], char: E, trie: Trie[E, V]): Int = {
-    val cur = lens.size
-    chars += char
-    values += trie.value
+  private def createFromSorted[E: ClassTag, V >: Null : ClassTag](sorted: Seq[Sequence[E, V]])
+                                                                 (implicit ord: Ordering[E]): TrieIndex[E, V] = {
+    val chars = new mutable.ArrayBuffer[E]
+    val values = new mutable.ArrayBuffer[V]
+    val lens = new mutable.ArrayBuffer[Int]
+
+    chars += null.asInstanceOf[E]
+    values += null
     lens += 0
-    var len = 0
-    for (child <- trie.children) {
-      len += fill(chars, values, lens, child._1, child._2)
+
+    val stack = mutable.Stack[Int]()
+    for (cur <- sorted) {
+      while (stack.size > cur.chars.size) {
+        val pos = stack.pop();
+        lens(pos) = chars.size - pos - 1
+      }
+
+      while (stack.nonEmpty && chars(stack.top) != cur.chars(stack.size - 1)) {
+        val pos = stack.pop()
+        lens(pos) = chars.size - pos - 1
+      }
+
+      for (c <- cur.chars.drop(stack.size)) {
+        stack.push(chars.size)
+        chars += c
+        values += null
+        lens += 0
+      }
+
+      values(values.size - 1) = cur.value
     }
-    lens(cur) = len
-    len + 1
+
+    lens(0) = lens.size - 1
+    while (stack.nonEmpty) {
+      val pos = stack.pop()
+      lens(pos) = chars.size - pos - 1
+    }
+
+    TrieIndex(chars.toArray, values.toArray, lens.toArray)
   }
 }

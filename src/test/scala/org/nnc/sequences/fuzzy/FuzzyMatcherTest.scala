@@ -13,9 +13,10 @@ class FuzzyMatcherTest extends FunSuite {
   test("wiki dictionary") {
     val words = readWords
     val pattern = createPattern("профессор", 2)
-    val trie = createTrie(words)
-    val linear = new TrieIndexFactory[Char, String]().create(trie)
-    val matcher = new FuzzyMatcher(linear)
+    val sequences = createSequences(words)
+//    val trie = TrieConverter.convert(TrieFactory.create(sequences))
+    val trie = TrieIndexFactory.create(sequences)
+    val matcher = new FuzzyMatcher(trie)
     var matches: Seq[FuzzyMatch[String]] = null
     val t0 = System.nanoTime()
     for (_ <- 0 until 25) {
@@ -37,8 +38,9 @@ class FuzzyMatcherTest extends FunSuite {
     }
   }
 
-  private def createTrie(keys: Iterable[String]): Trie[Char, String] =
-    new TrieFactory[Char, String]().create(keys.map(k => new Sequence(k.toCharArray, k)))
+  private def createSequences(data: Seq[String]): Seq[Sequence[Char, String]] = {
+    data.map(s => Sequence(s, s))
+  }
 
   //noinspection SameParameterValue
   private def createPattern(str: String, n: Int) =

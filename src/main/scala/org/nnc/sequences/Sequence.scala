@@ -8,6 +8,6 @@ package org.nnc.sequences
   * @tparam E Тип символа.
   * @tparam V Тип значения.
   */
-case class Sequence[E, V](chars: Array[E],
+case class Sequence[E, V](chars: Seq[E],
                           value: V)
 

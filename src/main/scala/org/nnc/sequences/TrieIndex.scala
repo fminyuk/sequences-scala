@@ -5,10 +5,10 @@ package org.nnc.sequences
   *
   * @param chars  Символы.
   * @param values Значения.
-  * @param lens   Индекс -размер поддерева.
+  * @param lens   Индекс - размер поддерева.
   * @tparam E Тип символов.
   * @tparam V Тип значений.
   */
-class TrieIndex[E, V >: Null](val chars: Array[E],
-                              val values: Array[V],
-                              val lens: Array[Int])
+case class TrieIndex[E, V >: Null](chars: Array[E],
+                                   values: Array[V],
+                                   lens: Array[Int])
