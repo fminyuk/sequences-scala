@@ -24,7 +24,7 @@ class FuzzyMatcherTest extends FunSuite {
     }
     val t1 = System.nanoTime()
     println(s"Time: ${(t1 - t0) / 25} ns")
-    println(s"Matches (${matches.length}):\n${matches.mkString("\n")}")
+    println(s"Matches (${matches.length}):\n${matches.sortBy(_.cost).mkString("\n")}")
   }
 
   @throws[IOException]
