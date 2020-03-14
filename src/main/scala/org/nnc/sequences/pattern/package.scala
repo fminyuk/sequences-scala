@@ -5,57 +5,63 @@ package object pattern {
   /**
     * Шаблон.
     *
-    * @param name Имя шаблона.
+    * @param name  Имя шаблона.
+    * @param units Элементы.
     */
-  case class Pattern(name: String)
+  final case class Pattern(name: String, units: Seq[Unit])
 
   /**
-    * Блок.
+    * Элемент шаблона.
+    *
+    * @param unitType Тип элемента.
+    * @param content  Содержимое элемиента.
     */
-  sealed trait Block {
+  final case class Unit(unitType: Unit.Type, content: Content)
+
+  final object Unit {
+
     /**
-      * Тип блока.
+      * Тип элемента.
       */
-    val blockType: BlockType
+    sealed trait Type
+
+    /**
+      * Обязательный блок.
+      */
+    final case class Required() extends Type
+
+    /**
+      * Необязательный блок.
+      */
+    final case class Option() extends Type
+
+    /**
+      * Повторяющийся блок.
+      *
+      * @param min Минимальное число повторов.
+      * @param max Максимальное число повторов.
+      */
+    final case class Repeat(min: Int, max: Int) extends Type
+
   }
 
   /**
-    * Элементарный блок.
+    * Содержимое элемента.
+    */
+  sealed trait Content
+
+  /**
+    * Элемент основанный на блоке.
     *
-    * @param blockType Тип блока.
-    * @param name      Имя блока.
+    * @param name Имя блока.
     */
-  final case class BlockElem(blockType: BlockType, name: String) extends Block
+  final case class ContentBlock(name: String) extends Content
 
   /**
-    * Составной блок.
+    * Составной элемент.
     *
-    * @param blockType Тип блока.
-    * @param blocks    Блоки.
+    * @param units Элементы.
     */
-  final case class BlockCompose(blockType: BlockType, blocks: Seq[Block]) extends Block
-
-  /**
-    * Тип блока.
-    */
-  sealed trait BlockType
-
-  /**
-    * Обязательный блок.
-    */
-  final case class RequiredBlock() extends BlockType
-
-  /**
-    * Необязательный блок.
-    */
-  final case class OptionBlock() extends BlockType
-
-  /**
-    * Повторяющийся блок.
-    *
-    * @param min Минимальное число повторов.
-    * @param max Максимальное число повторов.
-    */
-  final case class RepeatBlock(min: Option[Int], max: Option[Int]) extends BlockType
+  final case class ContentUnits(units: Seq[Unit]) extends Content
 
 }

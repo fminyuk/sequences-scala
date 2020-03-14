@@ -6,11 +6,11 @@ class PatternParserTest extends FunSuite {
   private val parser = new PatternParser {}
 
   test("pattern") {
-    val src = "pattern some"
+    val src = "pattern some = (abc)"
 
     val res = parser.parseAll(parser.pattern, src)
 
     assert(res.successful)
-    assert(res.get == Pattern("some"))
+    assert(res.get == Pattern("some", Seq(Unit(Unit.Required(), ContentBlock("abc")))))
   }
 }
