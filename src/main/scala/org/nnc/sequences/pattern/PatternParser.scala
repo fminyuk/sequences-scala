@@ -18,7 +18,7 @@ trait PatternParser extends RegexParsers {
     content => Unit(Unit.Required(), content)
   }
 
-  def unitRepeat: Parser[Unit] = "{" ~> content ~ opt("|" ~> slice) <~ "}" ^^ {
+  def unitRepeat: Parser[Unit] = "{" ~> content ~ opt(":" ~> slice) <~ "}" ^^ {
     case content ~ None => Unit(Unit.Repeat(0, Int.MaxValue), content)
     case content ~ Some((min, max)) => Unit(Unit.Repeat(min, max), content)
   }
@@ -35,7 +35,7 @@ trait PatternParser extends RegexParsers {
     units => ContentUnits(units)
   }
 
-  def slice: Parser[(Int, Int)] = opt(PatternParser.INT) ~ ":" ~ opt(PatternParser.INT) ^^ {
+  def slice: Parser[(Int, Int)] = opt(PatternParser.INT) ~ "," ~ opt(PatternParser.INT) ^^ {
     case None ~ _ ~ None => (0, Int.MaxValue)
     case None ~ _ ~ Some(max) => (0, max.toInt)
     case Some(min) ~ _ ~ None => (min.toInt, Int.MaxValue)
