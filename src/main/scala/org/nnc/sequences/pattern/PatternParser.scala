@@ -1,9 +1,9 @@
 package org.nnc.sequences.pattern
 
 import scala.util.matching.Regex
-import scala.util.parsing.combinator.{PackratParsers, RegexParsers}
+import scala.util.parsing.combinator.RegexParsers
 
-trait PatternParser extends RegexParsers with PackratParsers {
+trait PatternParser extends RegexParsers {
   def pattern: Parser[Pattern] = PatternParser.PATTERN ~> unitVars ^^ {
     unit => Pattern(unit)
   }
