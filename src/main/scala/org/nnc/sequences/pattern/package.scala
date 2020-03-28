@@ -5,62 +5,57 @@ package object pattern {
   /**
     * Шаблон.
     *
-    * @param units Элементы.
+    * @param unit Элемент.
     */
-  final case class Pattern(units: Seq[Unit])
+  final case class Pattern(unit: Unit)
 
   /**
     * Элемент шаблона.
-    *
-    * @param unitType Тип элемента.
-    * @param content  Содержимое элемиента.
     */
-  final case class Unit(unitType: Unit.Type, content: Content)
-
-  final object Unit {
-
-    /**
-      * Тип элемента.
-      */
-    sealed trait Type
-
-    /**
-      * Обязательный блок.
-      */
-    final case class Required() extends Type
-
-    /**
-      * Необязательный блок.
-      */
-    final case class Option() extends Type
-
-    /**
-      * Повторяющийся блок.
-      *
-      * @param min Минимальное число повторов.
-      * @param max Максимальное число повторов.
-      */
-    final case class Repeat(min: Int, max: Int) extends Type
-
-  }
+  sealed trait Unit
 
   /**
-    * Содержимое элемента.
+    * Варианты элементов.
+    *
+    * @param units Элементы.
     */
-  sealed trait Content
+  final case class UnitVars(units: Seq[Unit]) extends Unit
+
+  /**
+    * Последовательность элементов.
+    *
+    * @param units Элементы.
+    */
+  final case class UnitSeq(units: Seq[Unit]) extends Unit
 
   /**
     * Элемент основанный на блоке.
     *
-    * @param name Имя блока.
+    * @param block Имя блока.
     */
-  final case class ContentBlock(name: String) extends Content
+  final case class UnitBlock(block: String) extends Unit
 
   /**
-    * Составной элемент.
+    * Обязательный элемент.
     *
-    * @param units Элементы.
+    * @param unit Элемент.
     */
-  final case class ContentUnits(units: Seq[Unit]) extends Content
+  final case class UnitRequired(unit: Unit) extends Unit
+
+  /**
+    * Необязательный элемент.
+    *
+    * @param unit Элемент.
+    */
+  final case class UnitOption(unit: Unit) extends Unit
+
+  /**
+    * Повторяющийся элемент.
+    *
+    * @param unit Элемент.
+    * @param min Минимальное число повторов.
+    * @param max Максимальное число повторов.
+    */
+  final case class UnitRepeat(unit: Unit, min: Int, max: Int) extends Unit
 
 }

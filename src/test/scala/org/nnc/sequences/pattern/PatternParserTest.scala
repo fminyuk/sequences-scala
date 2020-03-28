@@ -11,7 +11,7 @@ class PatternParserTest extends FunSuite {
     val res = parser.parseAll(parser.pattern, src)
 
     assert(res.successful)
-    assert(res.get == Pattern(Seq(Unit(Unit.Required(), ContentBlock("abc")))))
+    assert(res.get == Pattern(UnitRequired(UnitBlock("abc"))))
   }
 
   test("pattern: option") {
@@ -20,7 +20,7 @@ class PatternParserTest extends FunSuite {
     val res = parser.parseAll(parser.pattern, src)
 
     assert(res.successful)
-    assert(res.get == Pattern(Seq(Unit(Unit.Option(), ContentBlock("abc")))))
+    assert(res.get == Pattern(UnitOption(UnitBlock("abc"))))
   }
 
   test("pattern: repeat") {
@@ -29,7 +29,7 @@ class PatternParserTest extends FunSuite {
     val res = parser.parseAll(parser.pattern, src)
 
     assert(res.successful)
-    assert(res.get == Pattern(Seq(Unit(Unit.Repeat(0, Int.MaxValue), ContentBlock("abc")))))
+    assert(res.get == Pattern(UnitRepeat(UnitBlock("abc"), 0, Int.MaxValue)))
   }
 
   test("pattern: repeat{1,2}") {
@@ -38,6 +38,36 @@ class PatternParserTest extends FunSuite {
     val res = parser.parseAll(parser.pattern, src)
 
     assert(res.successful)
-    assert(res.get == Pattern(Seq(Unit(Unit.Repeat(1, 2), ContentBlock("abc")))))
+    assert(res.get == Pattern(UnitRepeat(UnitBlock("abc"), 1, 2)))
+  }
+
+  test("pattern: seq") {
+    val src = "pattern (a) [b]"
+
+    val res = parser.parseAll(parser.pattern, src)
+
+    assert(res.successful)
+    assert(res.get == Pattern(UnitSeq(Seq(UnitRequired(UnitBlock("a")), UnitOption(UnitBlock("b"))))))
+  }
+
+  test("pattern: vars") {
+    val src = "pattern (a) | (b)"
+
+    val res = parser.parseAll(parser.pattern, src)
+
+    assert(res.successful)
+    assert(res.get == Pattern(UnitVars(Seq(UnitRequired(UnitBlock("a")), UnitRequired(UnitBlock("b"))))))
+  }
+
+  test("pattern: complex") {
+    val src = "pattern ((a) [b]) | (c)"
+
+    val res = parser.parseAll(parser.pattern, src)
+
+    assert(res.successful)
+    assert(res.get == Pattern(UnitVars(Seq(
+      UnitRequired(UnitSeq(Seq(UnitRequired(UnitBlock("a")), UnitOption(UnitBlock("b"))))),
+      UnitRequired(UnitBlock("c")))
+    )))
   }
 }

@@ -1,38 +1,42 @@
 package org.nnc.sequences.pattern
 
 import scala.util.matching.Regex
-import scala.util.parsing.combinator.RegexParsers
+import scala.util.parsing.combinator.{PackratParsers, RegexParsers}
 
-trait PatternParser extends RegexParsers {
-  def pattern: Parser[Pattern] = PatternParser.PATTERN ~> unitList ^^ {
-    units => Pattern(units)
+trait PatternParser extends RegexParsers with PackratParsers {
+  def pattern: Parser[Pattern] = PatternParser.PATTERN ~> unitVars ^^ {
+    unit => Pattern(unit)
   }
 
-  def unit: Parser[Unit] = unitOption | unitRequired | unitRepeat
-
-  def unitOption: Parser[Unit] = "[" ~> content <~ "]" ^^ {
-    content => Unit(Unit.Option(), content)
+  def unitVars: Parser[Unit] = rep1sep(unitSeq, "|") ^^ {
+    case head +: Seq() => head
+    case units => UnitVars(units)
   }
 
-  def unitRequired: Parser[Unit] = "(" ~> content <~ ")" ^^ {
-    content => Unit(Unit.Required(), content)
+  def unitSeq: Parser[Unit] = rep1(unitSimple) ^^ {
+    case head +: Seq() => head
+    case units => UnitSeq(units)
   }
 
-  def unitRepeat: Parser[Unit] = "{" ~> content ~ opt(":" ~> slice) <~ "}" ^^ {
-    case content ~ None => Unit(Unit.Repeat(0, Int.MaxValue), content)
-    case content ~ Some((min, max)) => Unit(Unit.Repeat(min, max), content)
+  def unitSimple: Parser[Unit] = unitOption | unitRequired | unitRepeat
+
+  def unitRequired: Parser[Unit] = "(" ~> unitContent <~ ")" ^^ {
+    content => UnitRequired(content)
   }
 
-  def unitList: Parser[Seq[Unit]] = rep1(unit)
-
-  def content: Parser[Content] = contentBlock | contentUnits
-
-  def contentBlock: Parser[Content] = PatternParser.IDENTIFIER ^^ {
-    name => ContentBlock(name)
+  def unitOption: Parser[Unit] = "[" ~> unitContent <~ "]" ^^ {
+    content => UnitOption(content)
   }
 
-  def contentUnits: Parser[Content] = unitList ^^ {
-    units => ContentUnits(units)
+  def unitRepeat: Parser[Unit] = "{" ~> unitContent ~ opt(":" ~> slice) <~ "}" ^^ {
+    case content ~ None => UnitRepeat(content, 0, Int.MaxValue)
+    case content ~ Some((min, max)) => UnitRepeat(content, min, max)
+  }
+
+  def unitContent: Parser[Unit] = unitBlock | unitVars
+
+  def unitBlock: Parser[Unit] = PatternParser.IDENTIFIER ^^ {
+    name => UnitBlock(name)
   }
 
   def slice: Parser[(Int, Int)] = opt(PatternParser.INT) ~ "," ~ opt(PatternParser.INT) ^^ {
