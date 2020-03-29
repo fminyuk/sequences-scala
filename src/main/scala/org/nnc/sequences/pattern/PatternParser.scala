@@ -4,8 +4,8 @@ import scala.util.matching.Regex
 import scala.util.parsing.combinator.RegexParsers
 
 trait PatternParser extends RegexParsers {
-  def pattern: Parser[Pattern] = PatternParser.PATTERN ~> unitVars ^^ {
-    unit => Pattern(unit)
+  def pattern: Parser[Pattern] = PatternParser.PATTERN ~> PatternParser.IDENTIFIER ~ "=" ~ unitVars ^^ {
+    case name ~ _ ~ unit => Pattern(name, unit)
   }
 
   def unitVars: Parser[Unit] = rep1sep(unitSeq, "|") ^^ {

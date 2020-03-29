@@ -5,9 +5,10 @@ package object pattern {
   /**
     * Шаблон.
     *
+    * @param name Имя шаблона.
     * @param unit Элемент.
     */
-  final case class Pattern(unit: Unit)
+  final case class Pattern(name: String, unit: Unit)
 
   /**
     * Элемент шаблона.
